@@ -10,6 +10,8 @@
     "@remix-run/react": "^1.6.8",
     "@remix-run/vercel": "^1.6.8",
     "@vercel/node": "^2.4.4",
+    "marked": "^4.0.19",
+    "qs": "^6.11.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

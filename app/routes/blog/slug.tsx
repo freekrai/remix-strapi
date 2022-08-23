@@ -27,20 +27,24 @@ type PostResponse = {
   };
 };
 
-export const loader: LoaderFunction = async () => {
-
+export const loader: LoaderFunction = async ({params}) => {
   const queryString = qs.stringify({
-    sort: 'publishedAt:desc',    
+	   filters: {
+          slug: {
+	        $eq: params.slug
+          }
+        },
+    },
     populate: "*", 
-    pagination: { start: 0, limit: 100} 
+    pagination: { start: 0, limit: 1} 
   });
   
   const url = `${STRAPI_API_URL}/api/posts?${queryString}`:
+
   const response = await fetch(url);
   const postResponse = (await response.json()) as PostResponse;
-
-  return json(
-    postResponse.data.map((post) => ({
+  const post = post.data[0];
+  return json({
       ...post,
       attributes: {
         ...post.attributes,
@@ -50,31 +54,23 @@ export const loader: LoaderFunction = async () => {
   );
 };
 
-const Posts: React.FC = () => {
-  const posts = useLoaderData();
-
+ const Posts: React.FC = () => {
+ const post = useLoaderData();
+  
+  const { title, article, createdAt } = post.attributes;
+  const date = new Date(createdAt).toLocaleString("en-US", {
+		weekday: "long",
+		year: "numeric",
+		month: "long",
+		day: "numeric",
+  });
+  
   return (
-    <>
-      {posts.map((post) => {
-        const { title, content, createdAt } = post.attributes;
-        const date = new Date(createdAt).toLocaleString("en-US", {
-          weekday: "long",
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        });
-
-        return (
-          <article key={post.id}>
-		<Link to={`/blog/${post.slug}`}
-	            <h1>{title}</h1>
-	            <time dateTime={createdAt}>{date}</time>
-	            <div dangerouslySetInnerHTML={{ __html: content }} />
-            </Link>
-          </article>
-        );
-      })}
-    </>
+	<article key={post.id}>
+		<h1>{title}</h1>
+		<time dateTime={createdAt}>{date}</time>
+		<div dangerouslySetInnerHTML={{ __html: content }} />
+	</article>
   );
 };
 export default Posts;
