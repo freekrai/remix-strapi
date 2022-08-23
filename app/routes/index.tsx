@@ -35,7 +35,7 @@ export const loader: LoaderFunction = async () => {
     pagination: { start: 0, limit: 100} 
   });
   
-  const url = `${STRAPI_API_URL}/api/posts?${queryString}`:
+  const url = `${STRAPI_API_URL}/api/posts?${queryString}`;
   const response = await fetch(url);
   const postResponse = (await response.json()) as PostResponse;
 
@@ -66,7 +66,7 @@ const Posts: React.FC = () => {
 
         return (
           <article key={post.id}>
-		<Link to={`/blog/${post.slug}`}
+		<Link to={`/blog/${post.slug}`}>
 	            <h1>{title}</h1>
 	            <time dateTime={createdAt}>{date}</time>
 	            <div dangerouslySetInnerHTML={{ __html: content }} />

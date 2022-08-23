@@ -29,17 +29,16 @@ type PostResponse = {
 
 export const loader: LoaderFunction = async ({params}) => {
   const queryString = qs.stringify({
-	   filters: {
+   filters: {
           slug: {
 	        $eq: params.slug
           }
         },
-    },
     populate: "*", 
     pagination: { start: 0, limit: 1} 
   });
   
-  const url = `${STRAPI_API_URL}/api/posts?${queryString}`:
+  const url = `${STRAPI_API_URL}/api/posts?${queryString}`;
 
   const response = await fetch(url);
   const postResponse = (await response.json()) as PostResponse;
@@ -50,8 +49,7 @@ export const loader: LoaderFunction = async ({params}) => {
         ...post.attributes,
         content: marked(post.attributes.content),
       },
-    }))
-  );
+  });
 };
 
  const Posts: React.FC = () => {
